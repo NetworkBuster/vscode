@@ -4,10 +4,19 @@
  *--------------------------------------------------------------------------------------------*/
 
 import assert from 'node:assert/strict';
+import { readFileSync } from 'node:fs';
+import path from 'node:path';
 import { suite, test } from 'node:test';
 import { findDrift } from '../../../.github/rulesets/rulesets.ts';
 
+const repositoryRoot = path.resolve(import.meta.dirname, '../../..');
+
 suite('Rulesets', () => {
+	test('checks live rulesets only in the repository where they are applied', () => {
+		const workflow = readFileSync(path.join(repositoryRoot, '.github/workflows/rulesets.yml'), 'utf8');
+		assert.match(workflow, /^\s+if: github\.repository == 'microsoft\/vscode'$/m);
+	});
+
 	test('a live ruleset differs from its definition in the values and rules of the definition, and in the bypass actors only when they are visible', () => {
 		const definition = {
 			name: 'main merge queue',
