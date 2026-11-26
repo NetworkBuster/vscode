@@ -20,6 +20,8 @@ permissions:
 jobs:
   check:
     name: Check rulesets
+    # Forks don't have the rulesets applied
+    if: github.repository == 'microsoft/vscode'
     runs-on: ubuntu-24.04
     timeout-minutes: 5
     steps:
